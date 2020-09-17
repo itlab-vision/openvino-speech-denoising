@@ -4,8 +4,6 @@ import numpy as np
 from openvino.inference_engine import IENetwork, IECore
 import features
 
-input_layer_name = "input"
-
 class SpeechDenoiser(ABC):
      @staticmethod
      def create(args):
