@@ -8,7 +8,7 @@ class SpeechDenoiser(ABC):
      @staticmethod
      def create(args):
         if args['name'] == 'DNS':
-            return DNS(args['xml'])
+            return DeepNoiseSuppression(args['xml'])
         else:
             raise Exception('Error: wrong name')
 
@@ -16,7 +16,7 @@ class SpeechDenoiser(ABC):
      def denoise(self, img, ID):
          '''Perform Noise Suppression'''
 
-class DNS(SpeechDenoiser):
+class DeepNoiseSuppression(SpeechDenoiser):
     def __init__(self, model):
         ''''''
 
