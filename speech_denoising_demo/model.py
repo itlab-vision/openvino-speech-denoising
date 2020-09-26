@@ -1,25 +1,28 @@
+import logging as log
 from abc import ABC, abstractmethod
-import sys, os
+import sys
+import os
 import numpy as np
-from .features import calcSpec, calcFeat, spec2sig
-from openvino.inference_engine import IECore
+
+from .features import calcFeat, calcSpec, spec2sig
+from openvino.inference_engine import  IECore
 
 class SpeechDenoiser(ABC):
-    ie_core = IECore()
+     @staticmethod
+     def create(args):
+        if args.model == 'nsnet2-20ms-baseline.xml':
+            return DeepNoiseSuppression(args.model, args.device)
+        else:
+            raise Exception('Error: wrong name')
 
-    @staticmethod
-    def create(args):
-       if args['name'] == 'DNS':
-           return DeepNoiseSuppression(args['model'], args['device'])
-       else:
-           raise Exception('Error: wrong name')
-    @abstractmethod
-    def denoise(self, img, ID):
-        '''Perform Noise Suppression'''
+     @abstractmethod
+     def denoise(self, data):
+         '''Perform Noise Suppression'''
 
 class DeepNoiseSuppression(SpeechDenoiser):
-    def __init__(self, model, device='CPU'):
-        print("Parameters for model ....")
+    
+     def __init__(self, model, device):
+        log.basicConfig(format='[ %(levelname)s ] %(message)s', level= log.INFO, stream=sys.stdout)
         self.cfg = {
             'winlen'   : 0.02,
             'hopfrac'  : 0.5,
@@ -28,18 +31,19 @@ class DeepNoiseSuppression(SpeechDenoiser):
             'feattype' : 'LogPow'
         }
         self.mingain = 10**(self.cfg['mingain']/20)
-
-        print("Reading IR for model ....")
-        self.network = SpeechDenoiser.ie_core.read_network(model, model.replace(".xml", ".bin"))
-        self.input_blob = next(iter(self.network.input_info))
+        # Plugin initialization
+        ie = IECore()
+        log.info("Loading network")
+        net = ie.read_network(model, os.path.splitext(model)[0] + ".bin")
+        self.input_blob = next(iter(self.network.input_info)) # ?
         self.output_blob = 'output'
         assert len(self.network.input_info) == 1, "One input is expected"
-
-        print("Loading network to the plugin...")
-        self.exec_net = SpeechDenoiser.ie_core.load_network(network=self.network, device_name=device)
-    
-    def preprocessing(self, sigIn):
-        self.inputSpec = calcSpec(sigIn, self.cfg)
+        # Loading model to the plugin
+        log.info("Loading model to the plugin")
+        self.exec_net = ie.load_network(network=net, device_name= device)
+      
+     def preprocessing(self, data):
+        self.inputSpec = calcSpec(data, self.cfg)
         inputFeature = calcFeat(self.inputSpec, self.cfg)
         # shape: [batch x time x freq]
         inputFeature = np.expand_dims(np.transpose(inputFeature), axis=0)
@@ -51,15 +55,18 @@ class DeepNoiseSuppression(SpeechDenoiser):
         outSpec = np.expand_dims(self.inputSpec, axis=2) * Gain
 
         # go back to time domain
-        sigOut = spec2sig(outSpec, self.cfg)
-        return sigOut
+        out = spec2sig(outSpec, self.cfg)
+        return out
 
-    def denoise(self, sigIn):
-        inputFeature = self.preprocessing(sigIn)
-
+    def denoise(self, data):
+        log.info("Preprocessing intput")
+        inputFeature = self.preprocessing(data)
         # Calculate network output
+        log.info("Starting inference")
         out = self.exec_net.infer({self.input_blob: inputFeature})[self.output_blob]
-        # print(out)
-        print(out.shape)
+        log.info("Inference successfull")
+        log.info("Output shape is " + str(out.shape))
+        log.info("Postprocessing output")
         result = self.postprocessing(out)
         return result
+      
