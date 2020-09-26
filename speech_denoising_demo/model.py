@@ -8,20 +8,19 @@ from .features import calcFeat, calcSpec, spec2sig
 from openvino.inference_engine import  IECore
 
 class SpeechDenoiser(ABC):
-     @staticmethod
-     def create(args):
+    @staticmethod
+    def create(args):
         if args.model == 'nsnet2-20ms-baseline.xml':
             return DeepNoiseSuppression(args.model, args.device)
         else:
             raise Exception('Error: wrong name')
 
-     @abstractmethod
-     def denoise(self, data):
+    @abstractmethod
+    def denoise(self, data):
          '''Perform Noise Suppression'''
 
 class DeepNoiseSuppression(SpeechDenoiser):
-    
-     def __init__(self, model, device):
+    def __init__(self, model, device):
         log.basicConfig(format='[ %(levelname)s ] %(message)s', level= log.INFO, stream=sys.stdout)
         self.cfg = {
             'winlen'   : 0.02,
@@ -35,14 +34,14 @@ class DeepNoiseSuppression(SpeechDenoiser):
         ie = IECore()
         log.info("Loading network")
         net = ie.read_network(model, os.path.splitext(model)[0] + ".bin")
-        self.input_blob = next(iter(self.network.input_info)) # ?
-        self.output_blob = 'output'
-        assert len(self.network.input_info) == 1, "One input is expected"
+        self.input_blob = next(iter(net.input_info)) # ?
+        self.output_blob = 'Sigmoid_31'
+        assert len(net.input_info) == 1, "One input is expected"
         # Loading model to the plugin
         log.info("Loading model to the plugin")
         self.exec_net = ie.load_network(network=net, device_name= device)
-      
-     def preprocessing(self, data):
+
+    def preprocessing(self, data):
         self.inputSpec = calcSpec(data, self.cfg)
         inputFeature = calcFeat(self.inputSpec, self.cfg)
         # shape: [batch x time x freq]
@@ -69,4 +68,4 @@ class DeepNoiseSuppression(SpeechDenoiser):
         log.info("Postprocessing output")
         result = self.postprocessing(out)
         return result
-      
+
