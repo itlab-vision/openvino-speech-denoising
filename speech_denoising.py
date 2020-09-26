@@ -3,7 +3,6 @@ import os
 import sys
 import time
 import argparse
-
 import soundfile as sf
 import sounddevice as sd
 
@@ -57,7 +56,7 @@ def main():
 
     log.info('Saving result')
     sf.write('res.wav', res, fs)
-    log.info('Result was written to ' + str(os.path.abspath(os.getcwd())) + '\\res.wav')
+    log.info('Result was written to ' + str(os.path.abspath(os.getcwd())) + '\\res.wav') # TODO: add output parameter
     # at least two cases : 1) upload audio, process it an than play. 2) record, process, play
 
 if __name__ == '__main__':
