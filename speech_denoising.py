@@ -5,6 +5,7 @@ import time
 import argparse
 import soundfile as sf
 import sounddevice as sd
+import numpy as np
 
 from openvino.inference_engine import IECore
 from speech_denoising_demo.model import SpeechDenoiser
@@ -37,9 +38,10 @@ def main():
     log.info('Create denoiser')
     denoiser = SpeechDenoiser.create(args)
     fs = 16000 # default sample rate for input
+
     if args.input == 'mic':
         log.info('Start recording')
-        duration = 10  # seconds
+        duration = 5  # seconds
         data = sd.rec(int(duration * fs), samplerate = fs, channels=1)
         sd.wait()
         log.info('Saving recording')
@@ -47,10 +49,23 @@ def main():
         log.info('Recording was written to ' + str(os.path.abspath(os.getcwd())) + '\\recording.wav')
     else:
         data, fs = sf.read(args.input)
+        data = np.reshape(data, (-1,1))
+        duration = int(data.shape[0]/fs)
         print(fs)
-
-    res = denoiser.denoise(data)
+    
+    # divide audio into blocks and process them one by one
+    nblocks = int(duration / denoiser.chunk)
+    block_size = int(denoiser.chunk*fs)
+    print(nblocks)
+    print(block_size)
+    print(data.shape)
+    res = np.zeros(shape=(0,1))
+    for i in range(nblocks):
+        out = denoiser.denoise(data[i*block_size:(i+1)*block_size, 0]).reshape(-1, 1)
+        print(out.shape)
+        res = np.concatenate((res, out[:out.shape[0]]))
     log.info('Playing result')
+    print(res.shape)
     sd.play(res, fs)
     status = sd.wait()
 

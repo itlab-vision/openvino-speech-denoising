@@ -10,7 +10,7 @@ from openvino.inference_engine import  IECore
 class SpeechDenoiser(ABC):
     @staticmethod
     def create(args):
-        if args.model == 'nsnet2-20ms-baseline.xml':
+        if 'nsnet2-20ms-baseline' in args.model:
             return DeepNoiseSuppression(args.model, args.device)
         else:
             raise Exception('Error: wrong name')
@@ -20,6 +20,7 @@ class SpeechDenoiser(ABC):
          '''Perform Noise Suppression'''
 
 class DeepNoiseSuppression(SpeechDenoiser):
+    chunk = 0.02
     def __init__(self, model, device):
         log.basicConfig(format='[ %(levelname)s ] %(message)s', level= log.INFO, stream=sys.stdout)
         self.cfg = {
@@ -32,13 +33,13 @@ class DeepNoiseSuppression(SpeechDenoiser):
         self.mingain = 10**(self.cfg['mingain']/20)
         # Plugin initialization
         ie = IECore()
-        log.info("Loading network")
+        # log.info("Loading network")
         net = ie.read_network(model, os.path.splitext(model)[0] + ".bin")
         self.input_blob = next(iter(net.input_info)) # ?
         self.output_blob = 'Sigmoid_31'
         assert len(net.input_info) == 1, "One input is expected"
         # Loading model to the plugin
-        log.info("Loading model to the plugin")
+        # log.info("Loading model to the plugin")
         self.exec_net = ie.load_network(network=net, device_name= device)
 
     def preprocessing(self, data):
@@ -58,14 +59,15 @@ class DeepNoiseSuppression(SpeechDenoiser):
         return out
 
     def denoise(self, data):
-        log.info("Preprocessing intput")
+        # log.info("Preprocessing input")
         inputFeature = self.preprocessing(data)
         # Calculate network output
-        log.info("Starting inference")
+        # log.info("Starting inference")
         out = self.exec_net.infer({self.input_blob: inputFeature})[self.output_blob]
-        log.info("Inference successfull")
-        log.info("Output shape is " + str(out.shape))
-        log.info("Postprocessing output")
+        # print(out.shape)
+        # log.info("Inference successfull")
+        # log.info("Output shape is " + str(out.shape))
+        # log.info("Postprocessing output")
         result = self.postprocessing(out)
         return result
 
