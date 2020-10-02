@@ -20,7 +20,7 @@ class SpeechDenoiser(ABC):
          '''Perform Noise Suppression'''
 
 class DeepNoiseSuppression(SpeechDenoiser):
-    chunk = 0.02
+    chunk = 1
     def __init__(self, model, device):
         log.basicConfig(format='[ %(levelname)s ] %(message)s', level= log.INFO, stream=sys.stdout)
         self.cfg = {

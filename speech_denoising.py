@@ -60,10 +60,22 @@ def main():
     print(block_size)
     print(data.shape)
     res = np.zeros(shape=(0,1))
+
+
     for i in range(nblocks):
-        out = denoiser.denoise(data[i*block_size:(i+1)*block_size, 0]).reshape(-1, 1)
-        print(out.shape)
-        res = np.concatenate((res, out[:out.shape[0]]))
+        input_data = data[i*block_size:(i+1)*block_size, 0]
+        out = denoiser.denoise(input_data).reshape(-1, 1)
+        if i > 0:
+            print(i)
+            tmpres = res[-160:]
+            tmpres += out[:160]
+            res[-160:] = tmpres
+            res = np.concatenate((res, out[160:out.shape[0]]))
+        else:
+            res = np.concatenate((res, out[:out.shape[0]]))
+
+    print('Number of blocks was', nblocks)
+
     log.info('Playing result')
     print(res.shape)
     sd.play(res, fs)

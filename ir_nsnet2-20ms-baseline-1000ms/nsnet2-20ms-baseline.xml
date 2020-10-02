@@ -2,16 +2,16 @@
 <net name="nsnet2-20ms-baseline" version="10">
 	<layers>
 		<layer id="0" name="input" type="Parameter" version="opset1">
-			<data element_type="f32" shape="1,1000,161"/>
+			<data element_type="f32" shape="1,100,161"/>
 			<output>
 				<port id="0" precision="FP32">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>161</dim>
 				</port>
 			</output>
 		</layer>
-		<layer id="1" name="MatMul_0/1_port_transpose1013_const" type="Const" version="opset1">
+		<layer id="1" name="MatMul_0/1_port_transpose1025_const" type="Const" version="opset1">
 			<data element_type="f32" offset="0" shape="400,161" size="257600"/>
 			<output>
 				<port id="1" precision="FP32">
@@ -25,7 +25,7 @@
 			<input>
 				<port id="0">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>161</dim>
 				</port>
 				<port id="1">
@@ -36,7 +36,7 @@
 			<output>
 				<port id="2" precision="FP32">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>400</dim>
 				</port>
 			</output>
@@ -55,7 +55,7 @@
 			<input>
 				<port id="0">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>400</dim>
 				</port>
 				<port id="1">
@@ -67,7 +67,7 @@
 			<output>
 				<port id="2" precision="FP32">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>400</dim>
 				</port>
 			</output>
@@ -76,14 +76,14 @@
 			<input>
 				<port id="0">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>400</dim>
 				</port>
 			</input>
 			<output>
 				<port id="1" precision="FP32">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>400</dim>
 				</port>
 			</output>
@@ -100,7 +100,7 @@
 			<input>
 				<port id="0">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>400</dim>
 				</port>
 				<port id="1">
@@ -109,7 +109,7 @@
 			</input>
 			<output>
 				<port id="2" precision="FP32">
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>1</dim>
 					<dim>400</dim>
 				</port>
@@ -127,7 +127,7 @@
 		<layer id="9" name="GRU_14/TensorIterator" type="TensorIterator" version="opset1">
 			<input>
 				<port id="0">
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>1</dim>
 					<dim>400</dim>
 				</port>
@@ -138,7 +138,7 @@
 			</input>
 			<output>
 				<port id="2" precision="FP32">
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>1</dim>
 					<dim>400</dim>
 				</port>
@@ -148,10 +148,10 @@
 				</port>
 			</output>
 			<port_map>
-				<input external_port_id="1" internal_layer_id="3"/>
 				<input axis="0" external_port_id="0" internal_layer_id="0" part_size="1" stride="1"/>
-				<output axis="0" external_port_id="2" internal_layer_id="11" part_size="1" stride="1"/>
+				<input external_port_id="1" internal_layer_id="3"/>
 				<output external_port_id="3" internal_layer_id="8"/>
+				<output axis="0" external_port_id="2" internal_layer_id="11" part_size="1" stride="1"/>
 			</port_map>
 			<back_edges>
 				<edge from-layer="8" to-layer="3"/>
@@ -318,7 +318,7 @@
 				</edges>
 			</body>
 		</layer>
-		<layer id="10" name="GRU_14/SqueezeNumDirections/1/Cast_11396_const" type="Const" version="opset1">
+		<layer id="10" name="GRU_14/SqueezeNumDirections/1/Cast_11392_const" type="Const" version="opset1">
 			<data element_type="i64" offset="260824" shape="3" size="24"/>
 			<output>
 				<port id="1" precision="I64">
@@ -354,7 +354,7 @@
 				</port>
 			</input>
 		</layer>
-		<layer id="13" name="GRU_14/SqueezeNumDirections/0/Cast_11388_const" type="Const" version="opset1">
+		<layer id="13" name="GRU_14/SqueezeNumDirections/0/Cast_11390_const" type="Const" version="opset1">
 			<data element_type="i64" offset="260848" shape="4" size="32"/>
 			<output>
 				<port id="1" precision="I64">
@@ -366,7 +366,7 @@
 			<data special_zero="True"/>
 			<input>
 				<port id="0">
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>1</dim>
 					<dim>400</dim>
 				</port>
@@ -376,7 +376,7 @@
 			</input>
 			<output>
 				<port id="2" precision="FP32">
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>1</dim>
 					<dim>1</dim>
 					<dim>400</dim>
@@ -394,7 +394,7 @@
 		<layer id="16" name="Squeeze_15" type="Squeeze" version="opset1">
 			<input>
 				<port id="0">
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>1</dim>
 					<dim>1</dim>
 					<dim>400</dim>
@@ -405,7 +405,7 @@
 			</input>
 			<output>
 				<port id="2" precision="FP32">
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>1</dim>
 					<dim>400</dim>
 				</port>
@@ -423,7 +423,7 @@
 		<layer id="18" name="GRU_20/TensorIterator" type="TensorIterator" version="opset1">
 			<input>
 				<port id="0">
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>1</dim>
 					<dim>400</dim>
 				</port>
@@ -434,7 +434,7 @@
 			</input>
 			<output>
 				<port id="2" precision="FP32">
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>1</dim>
 					<dim>400</dim>
 				</port>
@@ -444,10 +444,10 @@
 				</port>
 			</output>
 			<port_map>
-				<input external_port_id="1" internal_layer_id="3"/>
 				<input axis="0" external_port_id="0" internal_layer_id="0" part_size="1" stride="1"/>
-				<output axis="0" external_port_id="2" internal_layer_id="11" part_size="1" stride="1"/>
+				<input external_port_id="1" internal_layer_id="3"/>
 				<output external_port_id="3" internal_layer_id="8"/>
+				<output axis="0" external_port_id="2" internal_layer_id="11" part_size="1" stride="1"/>
 			</port_map>
 			<back_edges>
 				<edge from-layer="8" to-layer="3"/>
@@ -614,7 +614,7 @@
 				</edges>
 			</body>
 		</layer>
-		<layer id="19" name="GRU_20/SqueezeNumDirections/1/Cast_11390_const" type="Const" version="opset1">
+		<layer id="19" name="GRU_20/SqueezeNumDirections/1/Cast_11396_const" type="Const" version="opset1">
 			<data element_type="i64" offset="260824" shape="3" size="24"/>
 			<output>
 				<port id="1" precision="I64">
@@ -650,7 +650,7 @@
 				</port>
 			</input>
 		</layer>
-		<layer id="22" name="GRU_20/SqueezeNumDirections/0/Cast_11398_const" type="Const" version="opset1">
+		<layer id="22" name="GRU_20/SqueezeNumDirections/0/Cast_11388_const" type="Const" version="opset1">
 			<data element_type="i64" offset="260848" shape="4" size="32"/>
 			<output>
 				<port id="1" precision="I64">
@@ -662,7 +662,7 @@
 			<data special_zero="True"/>
 			<input>
 				<port id="0">
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>1</dim>
 					<dim>400</dim>
 				</port>
@@ -672,7 +672,7 @@
 			</input>
 			<output>
 				<port id="2" precision="FP32">
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>1</dim>
 					<dim>1</dim>
 					<dim>400</dim>
@@ -690,7 +690,7 @@
 		<layer id="25" name="Squeeze_21" type="Squeeze" version="opset1">
 			<input>
 				<port id="0">
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>1</dim>
 					<dim>1</dim>
 					<dim>400</dim>
@@ -701,13 +701,13 @@
 			</input>
 			<output>
 				<port id="2" precision="FP32">
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>1</dim>
 					<dim>400</dim>
 				</port>
 			</output>
 		</layer>
-		<layer id="26" name="Transpose_22/Cast_11392_const" type="Const" version="opset1">
+		<layer id="26" name="Transpose_22/Cast_11398_const" type="Const" version="opset1">
 			<data element_type="i64" offset="259200" shape="3" size="24"/>
 			<output>
 				<port id="1" precision="I64">
@@ -718,7 +718,7 @@
 		<layer id="27" name="Transpose_22" type="Transpose" version="opset1">
 			<input>
 				<port id="0">
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>1</dim>
 					<dim>400</dim>
 				</port>
@@ -729,7 +729,7 @@
 			<output>
 				<port id="2" precision="FP32">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>400</dim>
 				</port>
 			</output>
@@ -748,7 +748,7 @@
 			<input>
 				<port id="0">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>400</dim>
 				</port>
 				<port id="1">
@@ -759,7 +759,7 @@
 			<output>
 				<port id="2" precision="FP32">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>600</dim>
 				</port>
 			</output>
@@ -778,7 +778,7 @@
 			<input>
 				<port id="0">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>600</dim>
 				</port>
 				<port id="1">
@@ -790,7 +790,7 @@
 			<output>
 				<port id="2" precision="FP32">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>600</dim>
 				</port>
 			</output>
@@ -799,19 +799,19 @@
 			<input>
 				<port id="0">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>600</dim>
 				</port>
 			</input>
 			<output>
 				<port id="1" precision="FP32">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>600</dim>
 				</port>
 			</output>
 		</layer>
-		<layer id="33" name="MatMul_26/1_port_transpose1025_const" type="Const" version="opset1">
+		<layer id="33" name="MatMul_26/1_port_transpose1013_const" type="Const" version="opset1">
 			<data element_type="f32" offset="1223288" shape="600,600" size="1440000"/>
 			<output>
 				<port id="1" precision="FP32">
@@ -825,7 +825,7 @@
 			<input>
 				<port id="0">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>600</dim>
 				</port>
 				<port id="1">
@@ -836,7 +836,7 @@
 			<output>
 				<port id="2" precision="FP32">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>600</dim>
 				</port>
 			</output>
@@ -855,7 +855,7 @@
 			<input>
 				<port id="0">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>600</dim>
 				</port>
 				<port id="1">
@@ -867,7 +867,7 @@
 			<output>
 				<port id="2" precision="FP32">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>600</dim>
 				</port>
 			</output>
@@ -876,14 +876,14 @@
 			<input>
 				<port id="0">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>600</dim>
 				</port>
 			</input>
 			<output>
 				<port id="1" precision="FP32">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>600</dim>
 				</port>
 			</output>
@@ -902,7 +902,7 @@
 			<input>
 				<port id="0">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>600</dim>
 				</port>
 				<port id="1">
@@ -913,7 +913,7 @@
 			<output>
 				<port id="2" precision="FP32">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>161</dim>
 				</port>
 			</output>
@@ -932,7 +932,7 @@
 			<input>
 				<port id="0">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>161</dim>
 				</port>
 				<port id="1">
@@ -944,7 +944,7 @@
 			<output>
 				<port id="2" precision="FP32">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>161</dim>
 				</port>
 			</output>
@@ -953,14 +953,14 @@
 			<input>
 				<port id="0">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>161</dim>
 				</port>
 			</input>
 			<output>
 				<port id="1" precision="FP32">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>161</dim>
 				</port>
 			</output>
@@ -969,7 +969,7 @@
 			<input>
 				<port id="0">
 					<dim>1</dim>
-					<dim>1000</dim>
+					<dim>100</dim>
 					<dim>161</dim>
 				</port>
 			</input>
@@ -1024,10 +1024,15 @@
 		<MO_version value=""/>
 		<cli_parameters>
 			<blobs_as_inputs value="True"/>
+			<caffe_parser_path value="DIR"/>
 			<data_type value="float"/>
+			<disable_nhwc_to_nchw value="False"/>
+			<disable_omitting_optional value="False"/>
 			<disable_resnet_optimization value="False"/>
 			<disable_weights_compression value="False"/>
 			<enable_concat_optimization value="False"/>
+			<enable_flattening_nested_params value="False"/>
+			<enable_ssd_gluoncv value="False"/>
 			<extensions value="DIR"/>
 			<framework value="onnx"/>
 			<freeze_placeholder_with_value value="{}"/>
@@ -1035,9 +1040,12 @@
 			<generate_deprecated_IR_V7 value="False"/>
 			<generate_experimental_IR_V10 value="True"/>
 			<input_model value="DIR\nsnet2-20ms-baseline.onnx"/>
-			<input_shape value="(1, 1000, 161)"/>
+			<input_model_is_text value="False"/>
+			<input_shape value="(1, 100, 161)"/>
+			<k value="DIR\CustomLayersMapping.xml"/>
 			<keep_quantize_ops_in_IR value="True"/>
 			<keep_shape_ops value="False"/>
+			<legacy_mxnet_model value="False"/>
 			<log_level value="ERROR"/>
 			<mean_scale_values value="{}"/>
 			<mean_values value="()"/>
@@ -1045,13 +1053,16 @@
 			<move_to_preprocess value="False"/>
 			<output_dir value="DIR"/>
 			<placeholder_data_types value="{}"/>
-			<placeholder_shapes value="[   1 1000  161]"/>
+			<placeholder_shapes value="[  1 100 161]"/>
 			<progress value="False"/>
+			<remove_memory value="False"/>
+			<remove_output_softmax value="False"/>
 			<reverse_input_channels value="False"/>
+			<save_params_from_nd value="False"/>
 			<scale_values value="()"/>
 			<silent value="False"/>
 			<stream_output value="False"/>
-			<unset unset_cli_parameters="batch, disable_fusing, disable_gfusing, finegrain_fusing, input, output, scale, transformations_config"/>
+			<unset unset_cli_parameters="batch, counts, disable_fusing, disable_gfusing, finegrain_fusing, input, input_checkpoint, input_meta_graph, input_proto, input_symbol, mean_file, mean_file_offsets, nd_prefix_name, output, pretrained_model_name, saved_model_dir, saved_model_tags, scale, tensorboard_logdir, tensorflow_custom_layer_libraries, tensorflow_custom_operations_config_update, tensorflow_object_detection_api_pipeline_config, tensorflow_use_custom_operations_config, transformations_config"/>
 		</cli_parameters>
 	</meta_data>
 </net>
